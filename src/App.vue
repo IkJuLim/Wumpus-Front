@@ -1,9 +1,12 @@
 <template>
   <div id="app">
     <img width="40%" alt="Wumpus logo" src="./assets/logo.png">
-    <h2>Score: {{ returnValue.score }}</h2>
+    <div class="reload-container">
+      <button @click="reloadPage" class="reload-button">
+        Reload
+      </button>
+    </div>
     <div v-if="returnValue.states">
-      <!-- <h2>Action: {{ currentAction }}</h2> -->
       <div class="container">
         <button @click="previousPage" class="button">
           <p>&lt;</p>
@@ -116,7 +119,7 @@ export default {
   },
   methods: {
     getStates() {
-      axios.get("http://localhost:8080/api")
+      axios.get("http://wumpus.limikju.com:8080/api")
         .then(res => {
           console.log("성공", res);
           this.returnValue = res.data;
@@ -125,6 +128,10 @@ export default {
           console.error("실패", err);
           this.returnValue = { result: "error", states: [] };
         });
+    },
+    reloadPage() {
+      // 페이지를 새로고침
+      window.location.reload();
     },
     previousPage() {
       this.page = (this.page - 1 + this.returnValue.states.length) % this.returnValue.states.length;
@@ -200,8 +207,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: 0px;
-  margin-right: 0px;
+  margin-left: 5px;
+  margin-right: 5px;
   margin-top: 5px;
   margin-bottom: 5px;
 }
@@ -217,8 +224,19 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  width: 90%;
-  height: 90%;
+  width: 100%;
+  height: 100%;
   object-fit: cover; /* 이미지가 셀에 꽉 차게 표시 */
+}
+
+.reload-container {
+  padding: 20px;
+  text-align: center;
+}
+
+.reload-button {
+  width: 200%;
+  height: 40px;
+  
 }
 </style>
